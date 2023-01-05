@@ -38,8 +38,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    final supabase = Supabase.instance.client;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Supabase Flutter'),
@@ -48,11 +46,14 @@ class _MyHomePageState extends State<MyHomePage> {
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              FetchDataButton(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: const [
+                FetchDataButton(),
+                InsertDataButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -82,12 +83,37 @@ class _FetchDataButtonState extends State<FetchDataButton> {
             // supabaseからデータを取得
             final response = await supabase.from('todo').select();
             setState(() {
-              fetchResult = response[0].toString();
+              fetchResult = response.toString();
             });
           },
         ),
         Text(fetchResult),
       ],
+    );
+  }
+}
+
+/// 新規データ追加
+class InsertDataButton extends StatefulWidget {
+  const InsertDataButton({super.key});
+
+  @override
+  State<InsertDataButton> createState() => _InsertDataButtonState();
+}
+
+class _InsertDataButtonState extends State<InsertDataButton> {
+  @override
+  Widget build(BuildContext context) {
+    final supabase = Supabase.instance.client;
+    return ElevatedButton(
+      child: const Text('Insert Data'),
+      onPressed: () async {
+        // supabaseにデータを追加
+        final response = await supabase.from('todo').insert([
+          {'id': 2, 'name': 'test'},
+        ]);
+        print(response);
+      },
     );
   }
 }
