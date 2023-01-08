@@ -52,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: const [
                 FetchDataButton(),
                 InsertDataButton(),
+                UpdateDataButton(),
               ],
             ),
           ),
@@ -81,7 +82,10 @@ class _FetchDataButtonState extends State<FetchDataButton> {
           child: const Text('Fetch Data'),
           onPressed: () async {
             // supabaseからデータを取得
-            final response = await supabase.from('todo').select();
+            final response = await supabase
+                .from('todo')
+                .select()
+                .order('id', ascending: true);
             setState(() {
               fetchResult = response.toString();
             });
@@ -112,6 +116,25 @@ class _InsertDataButtonState extends State<InsertDataButton> {
         final response = await supabase.from('todo').insert([
           {'id': 2, 'name': 'test'},
         ]);
+        print(response);
+      },
+    );
+  }
+}
+
+/// データ更新ボタン
+class UpdateDataButton extends StatelessWidget {
+  const UpdateDataButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final supabase = Supabase.instance.client;
+    return ElevatedButton(
+      child: const Text('Update Data'),
+      onPressed: () async {
+        // supabaseのidが1のデータを更新
+        final response =
+            await supabase.from('todo').update({'name': 'テストデータ'}).eq('id', 1);
         print(response);
       },
     );
