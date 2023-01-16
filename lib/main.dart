@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_crud/sample_todo_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -42,22 +43,61 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('Supabase Flutter'),
       ),
-      body: SizedBox(
-        width: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('サンプルTODO'),
-                )
-              ],
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SizedBox.expand(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _CustomButton(
+                    onTap: () {
+                      // SampleTodoPageに遷移
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const SampleTodoPage(),
+                        ),
+                      );
+                    },
+                    label: 'サンプル Todo Page',
+                  ),
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CustomButton extends StatelessWidget {
+  const _CustomButton({
+    Key? key,
+    required this.onTap,
+    required this.label,
+  }) : super(key: key);
+
+  final void Function() onTap;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            )),
+        child: Text(label),
       ),
     );
   }
